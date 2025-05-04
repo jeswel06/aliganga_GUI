@@ -5,8 +5,11 @@
  */
 package Admin;
 
+import ForgotPass.ForgotPassword;
 import config.DbConnect;
 import config.Session;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,6 +47,24 @@ public class Login extends javax.swing.JFrame {
         return null;
     }
 }
+     private void logActivity(int userId, String action) {
+    String logSql = "INSERT INTO logs (user_id, activity, log_time) VALUES (?, ?, NOW())";
+
+    try (Connection connect = new DbConnect().getConnection(); 
+         PreparedStatement pst = connect.prepareStatement(logSql)) {
+
+        pst.setInt(1, userId);  // Set the user ID from the session
+        pst.setString(2, action);  // Set the action (e.g., "Admin logged in")
+
+        int rowsInserted = pst.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("Log successfully recorded.");
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Log Database Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -67,6 +88,7 @@ public class Login extends javax.swing.JFrame {
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -89,7 +111,7 @@ public class Login extends javax.swing.JFrame {
         });
         jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, 32));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 40));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 920, 40));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(255, 0, 0)));
@@ -148,19 +170,36 @@ public class Login extends javax.swing.JFrame {
         });
         jPanel3.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 20, 30));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 290, 250));
-
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
-        jLabel1.setText("JOB APPLICATION SYSTEM");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 410, 32));
+        jLabel1.setFont(new java.awt.Font("Arial Black", 3, 8)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 255));
+        jLabel1.setText("Forgot password?");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel1MouseExited(evt);
+            }
+        });
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 80, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, 290, 250));
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
         jLabel5.setText("WELCOME TO");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 210, 32));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 50, 210, 32));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 470));
+        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
+        jLabel6.setText("JOB APPLICATION SYSTEM");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 90, 410, 32));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 920, 470));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -186,46 +225,55 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_RbuttonActionPerformed
 
     private void LbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LbuttonActionPerformed
-       String usernameInput = user.getText().trim();
+      String usernameInput = user.getText().trim();
     String passwordInput = new String(pass.getPassword()).trim();
 
     if (usernameInput.isEmpty() || passwordInput.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Username and Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-    String hashedPasswordInput = hashPassword(passwordInput); 
+
+    String hashedPasswordInput = hashPassword(passwordInput);
     String sql = "SELECT u_id, fn, ln, em, us, type, status, ps FROM users WHERE us = ?";
 
-    try (Connection connect = new DbConnect().getConnection(); 
+    try (Connection connect = new DbConnect().getConnection();
          PreparedStatement pst = connect.prepareStatement(sql)) {
-        
+
         pst.setString(1, usernameInput);
         ResultSet rs = pst.executeQuery();
 
         if (rs.next()) {
-            String dbPassword = rs.getString("ps"); 
+            String dbPassword = rs.getString("ps");
             String status = rs.getString("status");
-            String userType = rs.getString("type"); 
-            
-            Session sess = Session.getInstance();
-        sess.setuid(rs.getInt("u_id"));  
-        sess.setFname(rs.getString("fn"));
-        sess.setLname(rs.getString("ln"));
-        sess.setemail(rs.getString("em"));
-        sess.setusername(rs.getString("us"));
-        sess.settype(rs.getString("type"));
-        sess.setStatus(rs.getString("status"));
-        System.out.println(""+sess.getuid());
+            String userType = rs.getString("type");
 
+            // If the account is pending, deny access
             if (status.equalsIgnoreCase("Pending")) {
                 JOptionPane.showMessageDialog(this, "Your account is pending. Please wait for admin approval.", "Access Denied", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-          if (hashedPasswordInput.equals(dbPassword)) {
-            JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-             
-           
 
+            // Validate password
+            if (hashedPasswordInput.equals(dbPassword)) {
+                
+                // Set the session details
+                Session sess = Session.getInstance();
+                sess.setuid(rs.getInt("u_id"));
+                sess.setFname(rs.getString("fn"));
+                sess.setLname(rs.getString("ln"));
+                sess.setemail(rs.getString("em"));
+                sess.setusername(rs.getString("us"));
+                sess.settype(userType);
+                sess.setStatus(status);
+
+                // Log the login activity
+                String activityMessage = userType.equalsIgnoreCase("admin") ? "Admin logged in" : "User logged in";
+                logActivity(sess.getuid(), activityMessage);
+
+                // Show success message
+                JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                // Direct the user to the appropriate dashboard based on their type
                 switch (userType.toLowerCase()) {
                     case "admin":
                     case "supplier":
@@ -238,7 +286,9 @@ public class Login extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Invalid User Type!", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                 }
-                this.dispose(); 
+
+                // Close the current window
+                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Username or Password!", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -248,7 +298,7 @@ public class Login extends javax.swing.JFrame {
 
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "DB Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }         
+    }   
     }//GEN-LAST:event_LbuttonActionPerformed
 
     private void userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userActionPerformed
@@ -258,6 +308,22 @@ public class Login extends javax.swing.JFrame {
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
       System.exit(0);
     }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+       ForgotPassword fp = new ForgotPassword();
+       fp.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void jLabel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseEntered
+       jLabel1.setForeground(Color.BLACK);
+       jLabel1.setCursor( new Cursor (Cursor.HAND_CURSOR) );
+    }//GEN-LAST:event_jLabel1MouseEntered
+
+    private void jLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseExited
+        jLabel1.setForeground(Color.BLUE);
+       jLabel1.setCursor( new Cursor (Cursor.DEFAULT_CURSOR) );
+    }//GEN-LAST:event_jLabel1MouseExited
 
     /**
      * @param args the command line arguments
@@ -303,6 +369,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

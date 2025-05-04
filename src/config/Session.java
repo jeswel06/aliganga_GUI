@@ -11,10 +11,12 @@ public class Session {
     private String email;
     private String username;
     private String pass;
-
-    
+    private String sq;
+    private String ans;
     private String type;
     private String status;
+    private String contact;
+
     
         
     private Session(){
@@ -85,4 +87,28 @@ public class Session {
     public void setStatus(String status){
     this.status = status;
             }
+    
+    public String getSq() {
+        return sq;
+    }
+
+    public void setSq(String sq) {
+        this.sq = sq;
+    }
+
+    public String getAns() {
+        return ans;
+    }
+
+    public void setAns(String ans) {
+        this.ans = ans;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
 }

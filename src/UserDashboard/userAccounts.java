@@ -158,7 +158,7 @@ public class userAccounts extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Book Antiqua", 3, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 51, 204));
-        jLabel7.setText("Change password");
+        jLabel7.setText("Click Here To Change Password");
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel7MouseClicked(evt);
