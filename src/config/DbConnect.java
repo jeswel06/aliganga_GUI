@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 public class DbConnect {
     public Connection connect;
 
+    
     public DbConnect() {
         try {
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/jobappointmen", "root", "");

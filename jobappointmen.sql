@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2025 at 05:46 PM
+-- Generation Time: May 29, 2025 at 03:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,49 @@ SET time_zone = "+00:00";
 --
 -- Database: `jobappointmen`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `applications`
+--
+
+CREATE TABLE `applications` (
+  `application_id` int(11) NOT NULL,
+  `user_name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `resume` text DEFAULT NULL,
+  `apply_date` date NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `job_id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `company` varchar(100) NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `job_type` enum('Full-time','Part-time','Contract','Internship','Temporary') NOT NULL,
+  `salary` decimal(10,2) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `requirements` text DEFAULT NULL,
+  `posted_date` date NOT NULL,
+  `application_deadline` date DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `jobs`
+--
+
+INSERT INTO `jobs` (`job_id`, `title`, `company`, `location`, `job_type`, `salary`, `description`, `requirements`, `posted_date`, `application_deadline`, `is_active`) VALUES
+(1, 'Tig mop', 'MR.CLEAN', 'City of Naga', 'Part-time', 1500.00, 'Tig limpyo sa sawg', 'RESUME\nID\nBIRTH CERTIFICATE', '2024-09-06', '2024-02-10', 1);
 
 -- --------------------------------------------------------
 
@@ -47,7 +90,13 @@ INSERT INTO `logs` (`log_id`, `u_id`, `activity`, `log_time`, `user_id`) VALUES
 (7, NULL, 'Admin updated a user', '2025-05-04 23:21:44', 10),
 (8, NULL, 'A new user registered', '2025-05-04 23:32:40', 16),
 (9, NULL, 'User reset their password.', '2025-05-04 23:39:23', 15),
-(10, NULL, 'User reset their password.', '2025-05-04 23:45:36', 15);
+(10, NULL, 'User reset their password.', '2025-05-04 23:45:36', 15),
+(11, NULL, 'A new user registered', '2025-05-29 08:11:43', 17),
+(12, NULL, 'Admin logged in', '2025-05-29 08:13:26', 17),
+(13, NULL, 'Admin logged in', '2025-05-29 08:17:32', 17),
+(14, NULL, 'Admin logged in', '2025-05-29 08:23:13', 17),
+(15, NULL, 'Admin logged in', '2025-05-29 08:40:59', 17),
+(16, NULL, 'Admin logged in', '2025-05-29 08:41:34', 17);
 
 -- --------------------------------------------------------
 
@@ -88,11 +137,26 @@ INSERT INTO `users` (`u_id`, `fn`, `ln`, `cn`, `em`, `us`, `ps`, `type`, `status
 (13, 'nesie', 'labasores', '09876232434', 'nesiee3@gmail.com', 'nesie31234', '8346272557eb3d5478a92a1a7ce4beebbc17ecdc0258e6ecd929acfdd4839320', 'Client', 'Pending', 'src/Images/491001377_1131193342108412_7973616869452142286_n.jpg', NULL, NULL),
 (14, 'james sven', 'ansali', '0932343434', 'james@gmail.com', 'james123', '338c8bf01f4552dff1d4b2eed84c7a38c3a5f001604804fba47e3d28fc6ad4f5', 'Admin', 'Pending', 'src/Images/dacdwarf.png', NULL, NULL),
 (15, 'testtttttt', 'testttttt', '09645646456', 'testtttt@gmail.com', 'jamess123', '338c8bf01f4552dff1d4b2eed84c7a38c3a5f001604804fba47e3d28fc6ad4f5', 'Client', 'Pending', '', 'What is your Favorite food?', 'Hannah'),
-(16, 'eheyy', 'heyy', '092323232', 'hey@gmail.com', 'hey123', '6d987a391d90fc2451751b2bb85890fc6e452bc057f39a85d8d1fd552f965fb2', 'Client', 'Pending', '', 'What is your Favorite food?', 'has');
+(16, 'eheyy', 'heyy', '092323232', 'hey@gmail.com', 'hey123', '6d987a391d90fc2451751b2bb85890fc6e452bc057f39a85d8d1fd552f965fb2', 'Client', 'Pending', '', 'What is your Favorite food?', 'has'),
+(17, 'jeswel', 'aliganga', '09488607861', 'jeswelaligang@gmail.com', 'jeswel23', '25c6591dd742c8244a5092c92f6af1eb5205795e31dd1a423c8d6a322e3698b3', 'Admin', 'approve', '', 'What is your hobby?', 'guitar');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `applications`
+--
+ALTER TABLE `applications`
+  ADD PRIMARY KEY (`application_id`),
+  ADD KEY `job_id` (`job_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`job_id`);
 
 --
 -- Indexes for table `logs`
@@ -113,20 +177,39 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `applications`
+--
+ALTER TABLE `applications`
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `u_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `u_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `applications`
+--
+ALTER TABLE `applications`
+  ADD CONSTRAINT `applications_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`),
+  ADD CONSTRAINT `applications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`u_id`);
 
 --
 -- Constraints for table `logs`

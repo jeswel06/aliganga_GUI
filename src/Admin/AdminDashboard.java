@@ -181,8 +181,8 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
-      jobAppointments ja = new jobAppointments();
-      ja.setVisible(true);
+      Jobs jj = new Jobs();
+      jj.setVisible(true);
       this.dispose();
     }//GEN-LAST:event_jLabel11MouseClicked
 
