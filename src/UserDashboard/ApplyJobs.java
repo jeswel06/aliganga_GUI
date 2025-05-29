@@ -142,7 +142,48 @@ public void loadJobs() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+            String titleStr = tit.getSelectedItem().toString(); // from JComboBox
+    String description = des.getText();
+    String location = loc.getText();
+    String salaryStr = sal.getText();
+
+    // Validate required fields
+    if (titleStr.isEmpty() || description.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Title and Description are required.");
+        return;
+    }
+
+    try {
+        BigDecimal salary = salaryStr.isEmpty() ? null : new BigDecimal(salaryStr);
+
+        // Connect to DB
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jobappointmen", "root", "");
+
+        // SQL Insert: status will be 'pending', created_at uses CURRENT_TIMESTAMP
+        String sql = "INSERT INTO jobs (user_id, title, description, location, salary, status) VALUES (?, ?, ?, ?, ?, 'pending')";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        // Provide placeholder user_id (e.g., 1)
+        pstmt.setInt(1, 1); // <-- Replace with actual logged-in user ID if available
+        pstmt.setString(2, titleStr);
+        pstmt.setString(3, description);
+        pstmt.setString(4, location);
+        if (salary != null) {
+            pstmt.setBigDecimal(5, salary);
+        } else {
+            pstmt.setNull(5, Types.DECIMAL);
+        }
+
+        pstmt.executeUpdate();
+        conn.close();
+
+        JOptionPane.showMessageDialog(null, "Job application submitted. Waiting for admin approval.");
+   
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Invalid salary format.");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
+    }
 
 
     }//GEN-LAST:event_jButton2ActionPerformed
