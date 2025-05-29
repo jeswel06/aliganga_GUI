@@ -9,7 +9,7 @@ import Admin.Login;
 import javax.swing.JOptionPane;
 
 /**
- *
+ *  
  * @author II
  */
 public class UserDashboard extends javax.swing.JFrame {
@@ -157,10 +157,9 @@ public class UserDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_accMouseClicked
 
     private void yaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yaMouseClicked
-        jobAppointments ua = new jobAppointments();
-        ua.setVisible(true);
-        this.dispose();
-
+ ApplyJobs aj = new ApplyJobs();
+    aj.setVisible(true);
+    this.dispose();
         // TODO add your handling code here:
     }//GEN-LAST:event_yaMouseClicked
 

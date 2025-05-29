@@ -8,12 +8,14 @@ package UserDashboard;
 import config.DbConnect;
 import config.Job;
 import config.Session;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -24,13 +26,14 @@ import javax.swing.JOptionPane;
  */
 public class ApplyJobs extends javax.swing.JFrame {
 
-private JComboBox jobListCombo;
+private JComboBox sd;
     public ApplyJobs() {
         initComponents();
+        loadJobs();
     }
 
 public void loadJobs() {
-    jobListCombo.removeAllItems();
+    sd.removeAllItems();
 
     try {
         DbConnect db = new DbConnect();
@@ -41,7 +44,7 @@ public void loadJobs() {
             String title = rs.getString("title");
 
             Job job = new Job(jobId, title);
-            jobListCombo.addItem(job);  // Add the Job object directly
+            sd.addItem(job);  // Add the Job object directly
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -58,22 +61,19 @@ public void loadJobs() {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        nameField = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        resumeArea = new javax.swing.JTextArea();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        tit = new javax.swing.JComboBox<>();
+        des = new javax.swing.JTextField();
+        loc = new javax.swing.JTextField();
+        sal = new javax.swing.JTextField();
+        sta = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        a = new javax.swing.JTable();
-        jobListCombo = new javax.swing.JComboBox<>();
-        emailField = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jobMap = new javax.swing.JComboBox<>();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -81,116 +81,71 @@ public void loadJobs() {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(255, 0, 0));
+        jLabel6.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel6.setText("Status :");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 340, -1, -1));
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 48)); // NOI18N
-        jLabel1.setText("Apply A Job");
+        jPanel3.setBackground(new java.awt.Color(255, 51, 51));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(103, 103, 103)
-                .addComponent(jLabel1)
-                .addContainerGap(537, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 80, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 460, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 70));
-        jPanel1.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 350, 40));
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 420, 350, 40));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 80, 460));
 
-        resumeArea.setColumns(20);
-        resumeArea.setRows(5);
-        jScrollPane1.setViewportView(resumeArea);
+        jLabel7.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel7.setText("Title :");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, -1, -1));
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 350, 60));
+        jLabel8.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel8.setText("Description :");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, -1, -1));
 
-        jButton1.setText("Apply Now");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel9.setText("Location :");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 220, -1, -1));
+
+        jLabel10.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel10.setText("Salary :");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 280, -1, -1));
+
+        tit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Job Title", "Call Center Agent  ", "Teacher  ", "Construction Worker  ", "Software Developer  ", "Nurse  ", "Police Officer  ", "Driver  ", "Sales Clerk  ", "Administrative Assistant  ", "Security Guard  ", "Chef  ", "Graphic Designer  ", "Civil Engineer  ", "Mechanic  ", "Farmer  ", "Fisherman  ", "Cashier  ", "Waiter/Waitress  ", "Janitor  ", "Electrician  ", " " }));
+        jPanel1.add(tit, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 210, 30));
+        jPanel1.add(des, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 110, 210, 60));
+        jPanel1.add(loc, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 210, 210, 30));
+        jPanel1.add(sal, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 270, 210, 30));
+
+        sta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pending" }));
+        jPanel1.add(sta, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 330, 210, 30));
+
+        jButton1.setText("BACK");
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 410, 80, 30));
+
+        jButton2.setText("ADD");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 410, 220, 50));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 370, 80, 30));
 
-        jLabel2.setText("Apply Date:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 400, -1, -1));
-
-        jLabel3.setText("Name:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, -1, -1));
-
-        jLabel4.setText("Email:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 250, -1, -1));
-
-        a.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(a);
-
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, -1, 260));
-
-        jobListCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(jobListCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 240, 30));
-        jPanel1.add(emailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, 350, 40));
-
-        jLabel5.setText("Resume:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 320, -1, -1));
-
-        jobMap.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(jobMap, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 240, 30));
-
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 500));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 460));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-           DbConnect db = new DbConnect();  // Use your custom connection handler
-    Connection conn = db.getConnection();
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
 
-    int userId = Session.getInstance().getuid(); // ✅ current logged-in user ID
-    String selectedTitle = (String) jobListCombo.getSelectedItem();
-    Integer jobId = a.get(selectedTitle);
 
-    String name = nameField.getText();
-    String email = emailField.getText();
-    String resumeText = resumeArea.getText();
-    String applyDate = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
-
-    String sql = "INSERT INTO applications (user_id, user_name, email, job_id, resume, apply_date) VALUES (?, ?, ?, ?, ?, ?)";
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, userId);
-        stmt.setString(2, name);
-        stmt.setString(3, email);
-        stmt.setInt(4, jobId);
-        stmt.setString(5, resumeText);
-        stmt.setString(6, applyDate);
-
-        stmt.executeUpdate();
-        JOptionPane.showMessageDialog(null, "Application submitted successfully!");
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error submitting application: " + e.getMessage());
-    }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,22 +183,19 @@ public void loadJobs() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable a;
-    private javax.swing.JTextField emailField;
+    private javax.swing.JTextField des;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JComboBox<String> jobListCombo;
-    private javax.swing.JComboBox<String> jobMap;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JTextArea resumeArea;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField loc;
+    private javax.swing.JTextField sal;
+    private javax.swing.JComboBox<String> sta;
+    private javax.swing.JComboBox<String> tit;
     // End of variables declaration//GEN-END:variables
 }

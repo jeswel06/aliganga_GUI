@@ -1,7 +1,6 @@
 
 package Admin;
 
-import Userdashboard.jobAppointments;
 import config.Session;
 import javax.swing.JOptionPane;
 
@@ -116,7 +115,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jLabel11MouseClicked(evt);
             }
         });
-        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 100, 40));
+        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 120, 40));
 
         jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 190, 120, 40));
 
